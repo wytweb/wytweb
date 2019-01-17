@@ -40,8 +40,12 @@
     <span>生成行数:</span>
     <input id="row" type="text" value="30">
     <button onclick="grow()">生成空白</button>
-    <button onclick="growR()">生成随机</button>
+    <div style="margin-top: 20px;display: inline-block">
+        <button onclick="growR()">生成行随机</button>
+        <button onclick="growA()">生成完全随机</button>
+    </div>
 </div>
+
 
 <script type="text/javascript">
   var xOffset = 10;
@@ -153,8 +157,23 @@
     gridSize = Math.floor(600/size);
     paint()
   }
-  // 随机生成
+  // 随机行生成
   function growR() {
+    var n = document.getElementById("row").value;
+    var arr = new Array(n);
+    for (var i = 0; i < n; i++) {
+      arr[i] = Math.random()*2 > 1 ? 1 : 0
+    }
+    for (var j = 0; j < n; j++) {
+      board[j] = arr
+    }
+
+    size = n;
+    gridSize = Math.floor(600/size);
+    paint()
+  }
+  // 随机生成
+  function growA() {
     var n = document.getElementById("row").value;
     for (var j = 0; j < n; j++) {
       var arr = new Array(n);
