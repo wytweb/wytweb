@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!--
+生命游戏：
+每个格子是一个细胞。
+当一个格子周围有3个细胞生，该细胞为生。
+周围有2个细胞生，该细胞生死不变。
+其他情况，细胞死。
+-->
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta author="D'T PH 7.0">
+    <title></title>
+    <style>
+        canvas {
+            background: #eeeeee;
+            border: 1px solid #c3c3c3;
+        }
+        button {
+            background: #aaaaaa;
+            border: none;
+            padding: 10px 40px;
+            font-size: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+<canvas id="myCanvas" width="620" height="620" onclick="mouseClick(event)"></canvas>
+</canvas>
+
+<div>
+    <span>刷新频率:</span>
+    <input id="fs" type="text" value="500">毫秒
+    <button onclick="start()">开始</button>
+    <button onclick="pause()">暂停</button>
+</div>
+<div style="margin-top: 20px">
+    <span>生成行数:</span>
+    <input id="row" type="text" value="30">
+    <button onclick="grow()">生成空白</button>
+    <button onclick="growR()">生成随机</button>
+</div>
+
+<script type="text/javascript">
+  var xOffset = 10;
+  var yOffset = 10;
+  var board = [];
+  var size = board.length;
+  var gridSize = Math.floor(600/size);
+
+  var c = document.getElementById("myCanvas");
+  var cxt = c.getContext("2d");
+  growR();
+
+  <!-- 主绘制函数 -->
+  function paint() {
+    cxt.fillStyle = "#eeeeee";
+    cxt.fillRect(0, 0, 620, 620);
+    for (var i = 0; i <= size; i++) {
+      cxt.moveTo(xOffset, yOffset + i * gridSize);
+      cxt.lineTo(xOffset + gridSize * size, yOffset + i * gridSize);
+    }
+    for (var j = 0; j <= size; j++) {
+      cxt.moveTo(xOffset + j * gridSize, yOffset);
+      cxt.lineTo(xOffset + j * gridSize, yOffset + gridSize * size);
+    }
+    cxt.stroke();
+
+    cxt.fillStyle = "#00ff00";
+    for (var x = 0; x < size; x++) {
+      for (var y = 0; y < size; y++) {
+        if (board[x][y] == 1) {
+          cxt.fillRect(xOffset + x * gridSize, yOffset + y * gridSize, gridSize - 1, gridSize - 1);
+
+        }
+      }
+    }
+  }
+
+  <!--我是上帝！鼠标点击，反转细胞存活情况 -->
+  function mouseClick(event) {
+    var x = parseInt((event.layerX - xOffset) / gridSize);
+    var y = parseInt((event.layerY - yOffset) / gridSize);
+    board[x][y] = !!board[x][y] ? 0 : 1;
+    paint();
+  }
+
+  <!--生死判定 -->
+  function reverse() {
+    var copy = JSON.parse(JSON.stringify(board));
+    for (var i = 0; i < size; i++) {
+      for (var j = 0; j < size; j++) {
+        var count = aroundCount(i, j);
+        if (count == 3) {
+          copy[i][j] = 1;
+        } else if (count == 2) {
+
+        } else {
+          copy[i][j] = 0;
+        }
+      }
+    }
+    board = copy;
+  }
+  <!--不算该细胞，周围八个格子细胞存活数 -->
+  function aroundCount(x, y) {
+    var count = 0;
+    for (var i = x - 1; i <= x + 1; i++) {
+      for (var j = y - 1; j <= y + 1; j++) {
+        if (i < 0 || i >= size || j < 0 || j >= size) {
+          continue;
+        }
+        if (board[i][j]) {
+          count++;
+        }
+      }
+    }
+    if (board[x][y]) {
+      count--;
+    }
+    return count;
+  }
+
+  var timer;
+  var timeNum = 500;
+  // start
+  function start() {
+    timeNum = document.getElementById("fs").value;
+    clearInterval(timer);
+    timer = setInterval(function () {
+      reverse();
+      paint();
+    }, timeNum);
+  }
+  // pause
+  function pause() {
+    clearInterval(timer)
+  }
+  // grow
+  function grow() {
+    var n = document.getElementById("row").value;
+    var arr = new Array(n);
+    for (var i = 0; i < n; i++) {
+      arr[i] = 0
+    }
+    for (var j = 0; j < n; j++) {
+      board[j] = arr
+    }
+
+    size = n;
+    gridSize = Math.floor(600/size);
+    paint()
+  }
+  // 随机生成
+  function growR() {
+    var n = document.getElementById("row").value;
+    for (var j = 0; j < n; j++) {
+      var arr = new Array(n);
+      for (var i = 0; i < n; i++) {
+        var m = Math.random()*3;
+        arr[i] = m > 2 ? 1 : 0;
+      }
+      board[j] = arr
+    }
+    size = n;
+    gridSize = Math.floor(600/size);
+    paint()
+  }
+</script>
+</body>
+
+</html>

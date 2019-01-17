@@ -1,3 +1,3 @@
-# wytweb
-wyt's web component library
-# dasd
+# 生命游戏
+
+# 运用了canvas实现,同时可以自定义格子数量和刷新频率
