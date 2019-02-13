@@ -55,28 +55,40 @@
   var gridSize = Math.floor(600/size);
 
   var c = document.getElementById("myCanvas");
-  var cxt = c.getContext("2d");
+  var ctx = c.getContext("2d");
   growR();
 
   <!-- 主绘制函数 -->
   function paint() {
-    cxt.fillStyle = "#eeeeee";
-    cxt.fillRect(0, 0, 620, 620);
-    for (var i = 0; i <= size; i++) {
-      cxt.moveTo(xOffset, yOffset + i * gridSize);
-      cxt.lineTo(xOffset + gridSize * size, yOffset + i * gridSize);
-    }
-    for (var j = 0; j <= size; j++) {
-      cxt.moveTo(xOffset + j * gridSize, yOffset);
-      cxt.lineTo(xOffset + j * gridSize, yOffset + gridSize * size);
-    }
-    cxt.stroke();
+    ctx.fillStyle = "#eeeeee";
+    ctx.fillRect(0, 0, 620, 620);
+    // ctx.beginPath();
+    // for (var i = 0; i <= size; i++) {
+    //   ctx.moveTo(xOffset, yOffset + i * gridSize);
+    //   ctx.lineTo(xOffset + gridSize * size, yOffset + i * gridSize);
+    // }
+    // for (var j = 0; j <= size; j++) {
+    //   ctx.moveTo(xOffset + j * gridSize, yOffset);
+    //   ctx.lineTo(xOffset + j * gridSize, yOffset + gridSize * size);
+    // }
+    // ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(xOffset - 1, yOffset - 1);
+    ctx.lineTo(xOffset + gridSize * size + 1, yOffset - 1);
+    ctx.moveTo(xOffset, yOffset + size * gridSize);
+    ctx.lineTo(xOffset + gridSize * size, yOffset + size * gridSize);
 
-    cxt.fillStyle = "#00ff00";
+    ctx.moveTo(xOffset - 1, yOffset - 1);
+    ctx.lineTo(xOffset - 1, yOffset + gridSize * size + 1);
+    ctx.moveTo(xOffset + size * gridSize, yOffset);
+    ctx.lineTo(xOffset + size * gridSize, yOffset + gridSize * size);
+    ctx.stroke();
+
+    ctx.fillStyle = "#00ff00";
     for (var x = 0; x < size; x++) {
       for (var y = 0; y < size; y++) {
         if (board[x][y] == 1) {
-          cxt.fillRect(xOffset + x * gridSize, yOffset + y * gridSize, gridSize - 1, gridSize - 1);
+          ctx.fillRect(xOffset + x * gridSize, yOffset + y * gridSize, gridSize - 1, gridSize - 1);
 
         }
       }
